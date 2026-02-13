@@ -1,13 +1,13 @@
-name: CV Process
+name: CV Process (force output)
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'images/**'
+      - '**'            # 何がpushされても動く（まずは確実に出力させる）
 
 jobs:
-  run-cv:
+  run:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,41 +16,65 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Detect added image (robust)
-        id: img
+      - name: List repo (debug)
+        run: |
+          pwd
+          ls -la
+          echo "--- images ---"
+          ls -la images || true
+          echo "--- docs/data ---"
+          ls -la docs/data || true
+
+      # 画像が無くても index.json を必ず作る（images/ の一覧から作成）
+      - name: Rebuild index.json (force)
+        shell: bash
+        run: |
+          mkdir -p docs/data
+          # 画像拡張子を列挙（大文字拡張子にも対応）
+          mapfile -t FILES < <(find images -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.bmp' -o -iname '*.tif' -o -iname '*.tiff' \) 2>/dev/null | sort -r)
+          : > docs/data/index.json
+          if [ ${#FILES[@]} -eq 0 ]; then
+            # 画像が無い場合でも空配列を書いておく
+            echo "[]" > docs/data/index.json
+          else
+            # 画像名＋.json へ変換して配列出力
+            printf "[" > docs/data/index.json
+            SEP=""
+            for f in "${FILES[@]}"; do
+              base="$(basename "$f").json"
+              printf "%s\"%s\"" "$SEP" "$base" >> docs/data/index.json
+              SEP=","
+            done
+            printf "]" >> docs/data/index.json
+          fi
+          echo "--- built index.json ---"
+          cat docs/data/index.json
+
+      # 最新1枚分の結果JSONが無ければダミーを書いておく（CVエラー切り分け用）
+      - name: Ensure latest result JSON exists (dummy if missing)
         shell: bash
         run: |
           set -e
-          # GitHubイベントの added から images/ 配下を拾う
-          FILE="$(jq -r '.head_commit.added[]? // empty' "$GITHUB_EVENT_PATH" | grep '^images/' | head -n 1 || true)"
-          # 複数コミット/複数ファイルにフォールバック
-          if [ -z "$FILE" ]; then
-            FILE="$(jq -r '.commits[]?.added[]? // empty' "$GITHUB_EVENT_PATH" | grep '^images/' | head -n 1 || true)"
+          if [ ! -s docs/data/index.json ]; then
+            echo "[]" > docs/data/index.json
           fi
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-          echo "Detected: $FILE"
+          latest_json=$(jq -r '.[0] // empty' docs/data/index.json || echo "")
+          if [ -n "$latest_json" ] && [ ! -f "docs/data/$latest_json" ]; then
+            echo "Create dummy result: docs/data/$latest_json"
+            ts=$(date +%s)
+            cat > "docs/data/$latest_json" <<EOF
+{
+  "source": { "file": "${latest_json%.json}", "ts": $ts },
+  "cv_result": { "note": "dummy; CV not run yet" }
+}
+EOF
+          fi
 
-      - name: Stop if no image
-        if: ${{ steps.img.outputs.file == '' }}
-        run: echo "No new image under images/. Skip." && exit 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Run CV script
-        env:
-          AZURE_CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
-          AZURE_CV_KEY: ${{ secrets.AZURE_CV_KEY }}
-          INPUT_IMAGE: ${{ steps.img.outputs.file }}
-        run: python scripts/run_cv.py
-
-      - name: Commit results (JSON + index.json)
+      - name: Commit outputs
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data
-          git commit -m "Add CV results [skip ci]" || echo "no changes"
+          git commit -m "force(rebuild): index.json and ensure latest result [skip ci]" || echo "no changes"
           git push
