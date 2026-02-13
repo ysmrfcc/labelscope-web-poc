@@ -3,59 +3,151 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CVテストビューア</title>
+  <title>CVテストビューア（PoC用 認証ゲート付き）</title>
   <style>
-    body { font-family: sans-serif; padding: 16px; }
-    button { padding: 10px 16px; font-size: 16px; }
-    pre { white-space: pre-wrap; background: #f0f0f0; padding: 10px; }
+    body { font-family: system-ui, sans-serif; margin: 16px; }
+    .panel { max-width: 440px; margin: 6vh auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+    label { display:block; margin: 10px 0 4px; }
+    input { width:100%; padding:10px; box-sizing:border-box; }
+    button { width:100%; padding:12px; margin-top:12px; }
+    .error { color:#c00; margin-top:8px; min-height:1.2em; }
+    .hidden { display:none; }
+    pre { white-space: pre-wrap; background:#f7f7f7; padding:10px; }
   </style>
 </head>
 <body>
 
-<h2>画像アップロード（スマホ）</h2>
+<!-- ▼▼▼ PoC用コメント：本番は必ずサーバー側認証に置換すること ▼▼▼
+  この認証はクライアント側(JS)のみで行います。簡易的です。
+  本番移行時は、サーバー側認証（Azure Static Web Apps + Functions 等）に切り替えてください。
+▲▲▲ -->
 
-<p>画像は GitHub の <b>images/</b> にアップロードしてください。</p>
-<p>
-  <a href="https://github.com/あなたのユーザー名/labelscope-web-poc/upload/main/images"
-     target="_blank">
-     画像をアップロードする
-  </a>
-</p>
+<!-- 認証画面 -->
+<section id="loginPanel" class="panel">
+  <h2>ログイン</h2>
+  <label for="uid">ID</label>
+  <input id="uid" autocomplete="username" />
+  <label for="pwd">パスワード</label>
+  <input id="pwd" type="password" autocomplete="current-password" />
+  <button id="loginBtn">ログイン</button>
+  <div id="err" class="error"></div>
+</section>
 
-<hr>
+<!-- 認証後のみ表示する本体（撮影＋結果確認の最小） -->
+<section id="app" class="hidden">
+  <h2>撮影</h2>
+  <video id="cam" playsinline autoplay style="width:100%;max-width:420px;border:1px solid #ccc;"></video>
+  <div style="margin:8px 0;">
+    <button id="shotBtn">シャッター</button>
+    <button id="retakeBtn" disabled>撮り直し</button>
+    <button id="sendBtn" disabled>送信</button>
+  </div>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <img id="preview" alt="プレビュー" style="display:none;width:100%;max-width:420px;border:1px solid #ccc;"/>
 
-<h2>最新の解析結果</h2>
+  <hr>
+  <h2>最新の解析結果</h2>
+  <button id="loadBtn">最新結果を読み込む</button>
+  <pre id="resultArea"></pre>
+</section>
 
-<button onclick="loadResult()">最新結果を index.json を読む
-    const indexUrl = "./data/index.json";
-    const indexRes = await fetch(indexUrl + "?t=" + Date.now());
-    if (!indexRes.ok) {
-      document.getElementById("resultArea").textContent = "index.json がありません。";
-      return;
-    }
+<script>
+// ======== 固定ID/パス（PoC用・平文照合） ========
+const VALID_ID = "takeshitabpoai";
+const VALID_PASS = "39takeshita66";
 
-    const files = await indexRes.json();
-    if (!files.length) {
-      document.getElementById("resultArea").textContent = "まだ結果がありません。";
-      return;
-    }
+// セッション（同タブ内で保持）
+const SESSION_KEY = "ls_auth_ok";
 
-    // 一番上＝最新
-    const latest = files[0];
-    const jsonUrl = "./data/" + latest;
-    const res = await fetch(jsonUrl + "?t=" + Date.now());
-    const data = await res.json();
+// 既に認証済みなら本体へ
+if (sessionStorage.getItem(SESSION_KEY) === "1") showApp();
 
-    document.getElementById("resultArea").textContent =
-      JSON.stringify(data, null, 2);
+// ログイン
+document.getElementById("loginBtn").onclick = () => {
+  const uid = document.getElementById("uid").value.trim();
+  const pwd = document.getElementById("pwd").value;
+  const err = document.getElementById("err");
+  err.textContent = "";
 
+  if (!uid || !pwd) { err.textContent = "IDとパスワードを入力してください。"; return; }
+  if (uid !== VALID_ID || pwd !== VALID_PASS) { err.textContent = "認証に失敗しました。"; return; }
+
+  sessionStorage.setItem(SESSION_KEY, "1");
+  showApp();
+};
+
+// 認証後の初期化
+async function showApp(){
+  document.getElementById("loginPanel").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  // カメラ起動（背面優先）
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio:false });
+    const cam = document.getElementById("cam");
+    cam.srcObject = stream;
   } catch(e) {
-    document.getElementById("resultArea").textContent =
-      "エラー: " + e.message;
+    document.getElementById("resultArea").textContent = "カメラ起動に失敗: " + e.message;
   }
+
+  const camEl = document.getElementById('cam');
+  const canvas = document.getElementById('canvas');
+  const preview = document.getElementById('preview');
+  const shotBtn = document.getElementById('shotBtn');
+  const retakeBtn = document.getElementById('retakeBtn');
+  const sendBtn = document.getElementById('sendBtn');
+  const loadBtn = document.getElementById('loadBtn');
+  const resultArea = document.getElementById('resultArea');
+  let blob = null;
+
+  shotBtn.onclick = () => {
+    const w = camEl.videoWidth, h = camEl.videoHeight;
+    if (!w || !h) { resultArea.textContent = "カメラ準備中。数秒後に再試行。"; return; }
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d'); ctx.drawImage(camEl, 0, 0, w, h);
+    canvas.toBlob(b => {
+      blob = b;
+      preview.src = URL.createObjectURL(b);
+      preview.style.display = 'block';
+      retakeBtn.disabled = false;
+      sendBtn.disabled = false;
+    }, 'image/jpeg', 0.9);
+  };
+
+  retakeBtn.onclick = () => {
+    blob = null;
+    preview.src = '';
+    preview.style.display = 'none';
+    retakeBtn.disabled = true;
+    sendBtn.disabled = true;
+  };
+
+  // 送信：いまは GitHub のアップロード画面へ誘導（完全サーバーレスのため）
+  sendBtn.onclick = async () => {
+    if (!blob) { resultArea.textContent = "先に撮影してください。"; return; }
+    const file = new File([blob], `cam_${Date.now()}.jpg`, { type: 'image/jpeg' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+    window.open('https://github.com/ysmrfcc/labelscope-web-poc/upload/main/images', '_blank');
+    resultArea.textContent = "端末に保存しました。新しいタブのGitHub画面から images/ にアップロードしてください。";
+  };
+
+  // 解析結果の取得（Actionsが docs/data/index.json を更新する前提）
+  loadBtn.onclick = async () => {
+    try {
+      const indexRes = await fetch("./data/index.json?t=" + Date.now());
+      if (!indexRes.ok) { resultArea.textContent = "index.json が見つかりません。"; return; }
+      const list = await indexRes.json();
+      if (!list.length) { resultArea.textContent = "まだ結果がありません。"; return; }
+      const latest = list[0];
+      const res = await fetch("./data/" + latest + "?t=" + Date.now());
+      const data = await res.json();
+      resultArea.textContent = JSON.stringify(data, null, 2);
+    } catch(e) {
+      resultArea.textContent = "読み込みエラー: " + e.message;
+    }
+  };
 }
 </script>
-
 </body>
 </html>
-
