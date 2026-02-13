@@ -1,13 +1,13 @@
-name: CV Process (force output)
+name: CV Process
 
 on:
   push:
     branches: [ main ]
     paths:
-      - '**'            # 何がpushされても動く（まずは確実に出力させる）
+      - 'images/**'    # images 配下が更新されたら毎回走る
 
 jobs:
-  run:
+  run-cv:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,65 +16,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: List repo (debug)
-        run: |
-          pwd
-          ls -la
-          echo "--- images ---"
-          ls -la images || true
-          echo "--- docs/data ---"
-          ls -la docs/data || true
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      # 画像が無くても index.json を必ず作る（images/ の一覧から作成）
-      - name: Rebuild index.json (force)
-        shell: bash
+      - name: Run builder (create results + index.json)
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AZURE_CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
+          AZURE_CV_KEY: ${{ secrets.AZURE_CV_KEY }}
         run: |
-          mkdir -p docs/data
-          # 画像拡張子を列挙（大文字拡張子にも対応）
-          mapfile -t FILES < <(find images -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.bmp' -o -iname '*.tif' -o -iname '*.tiff' \) 2>/dev/null | sort -r)
-          : > docs/data/index.json
-          if [ ${#FILES[@]} -eq 0 ]; then
-            # 画像が無い場合でも空配列を書いておく
-            echo "[]" > docs/data/index.json
-          else
-            # 画像名＋.json へ変換して配列出力
-            printf "[" > docs/data/index.json
-            SEP=""
-            for f in "${FILES[@]}"; do
-              base="$(basename "$f").json"
-              printf "%s\"%s\"" "$SEP" "$base" >> docs/data/index.json
-              SEP=","
-            done
-            printf "]" >> docs/data/index.json
-          fi
-          echo "--- built index.json ---"
-          cat docs/data/index.json
-
-      # 最新1枚分の結果JSONが無ければダミーを書いておく（CVエラー切り分け用）
-      - name: Ensure latest result JSON exists (dummy if missing)
-        shell: bash
-        run: |
-          set -e
-          if [ ! -s docs/data/index.json ]; then
-            echo "[]" > docs/data/index.json
-          fi
-          latest_json=$(jq -r '.[0] // empty' docs/data/index.json || echo "")
-          if [ -n "$latest_json" ] && [ ! -f "docs/data/$latest_json" ]; then
-            echo "Create dummy result: docs/data/$latest_json"
-            ts=$(date +%s)
-            cat > "docs/data/$latest_json" <<EOF
-{
-  "source": { "file": "${latest_json%.json}", "ts": $ts },
-  "cv_result": { "note": "dummy; CV not run yet" }
-}
-EOF
-          fi
+          python scripts/build_results.py
 
       - name: Commit outputs
-        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data
-          git commit -m "force(rebuild): index.json and ensure latest result [skip ci]" || echo "no changes"
+          git commit -m "results: update docs/data (json + index.json) [skip ci]" || echo "no changes"
           git push
