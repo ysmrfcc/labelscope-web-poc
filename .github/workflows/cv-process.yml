@@ -1,47 +1,56 @@
-name: CV Process (sanity)
+name: CV Process
 
 on:
   push:
+    branches: [ main ]
     paths:
       - 'images/**'
 
 jobs:
-  sanity:
+  run-cv:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Detect added image
+      - name: Detect added image (robust)
         id: img
         shell: bash
         run: |
           set -e
-          FILE="$(git diff --name-only HEAD^ HEAD | grep '^images/' | head -n 1 || true)"
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-
-      - name: Ensure docs/data exists and write index.json
-        if: ${{ steps.img.outputs.file != '' }}
-        shell: bash
-        run: |
-          mkdir -p docs/data
-          NAME="$(basename '${{ steps.img.outputs.file }}').json"
-          # 既存 index.json があれば先頭に今回分を入れる／なければ新規作成
-          if [ -f docs/data/index.json ]; then
-            jq --arg n "$NAME" '([$n] + .) | unique | .[:100]' docs/data/index.json > docs/data/.index.tmp || echo '["'"$NAME"'"]' > docs/data/.index.tmp
-            mv docs/data/.index.tmp docs/data/index.json
-          else
-            echo '["'"$NAME"'"]' > docs/data/index.json
+          # GitHubイベントの added から images/ 配下を拾う
+          FILE="$(jq -r '.head_commit.added[]? // empty' "$GITHUB_EVENT_PATH" | grep '^images/' | head -n 1 || true)"
+          # 複数コミット/複数ファイルにフォールバック
+          if [ -z "$FILE" ]; then
+            FILE="$(jq -r '.commits[]?.added[]? // empty' "$GITHUB_EVENT_PATH" | grep '^images/' | head -n 1 || true)"
           fi
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+          echo "Detected: $FILE"
 
-      - name: Commit index.json
-        if: ${{ steps.img.outputs.file != '' }}
+      - name: Stop if no image
+        if: ${{ steps.img.outputs.file == '' }}
+        run: echo "No new image under images/. Skip." && exit 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run CV script
+        env:
+          AZURE_CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
+          AZURE_CV_KEY: ${{ secrets.AZURE_CV_KEY }}
+          INPUT_IMAGE: ${{ steps.img.outputs.file }}
+        run: python scripts/run_cv.py
+
+      - name: Commit results (JSON + index.json)
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/index.json
-          git commit -m "init index.json [skip ci]" || echo "no changes"
+          git add docs/data
+          git commit -m "Add CV results [skip ci]" || echo "no changes"
           git push
