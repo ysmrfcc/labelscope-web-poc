@@ -1,0 +1,61 @@
+name: CV Process
+
+on:
+  push:
+    paths:
+      - "images/**"
+
+jobs:
+  run-cv:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find changed image
+        id: img
+        run: |
+          echo "file=$(git diff --name-only HEAD^ HEAD | grep images/ | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Run CV
+        env:
+          CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
+          CV_KEY: ${{ secrets.AZURE_CV_KEY }}
+        run: |
+          python3 - << 'PY'
+import os, json, base64, requests, pathlib
+
+cv_endpoint = os.environ["CV_ENDPOINT"]
+cv_key = os.environ["CV_KEY"]
+
+file = os.environ["INPUT_FILE"]
+
+if not file:
+    print("No image found.")
+    exit(0)
+
+# load image
+with open(file, "rb") as f:
+    data = f.read()
+
+url = f"{cv_endpoint}/computervision/imageanalysis:analyze?api-version=2023-10-01&features=caption,tags"
+headers = {"Ocp-Apim-Subscription-Key": cv_key, "Content-Type": "application/octet-stream"}
+res = requests.post(url, headers=headers, data=data)
+result = res.json()
+
+# save result JSON
+out = pathlib.Path("docs/data") / (pathlib.Path(file).name + ".json")
+out.parent.mkdir(parents=True, exist_ok=True)
+out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+PY
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/data
+          git commit -m "Add CV result" || echo "no changes"
+          git push
