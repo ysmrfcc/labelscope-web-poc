@@ -1,0 +1,13 @@
+{
+  "source": {
+    "file": "cam_1770951284230.jpg",
+    "path": "images/cam_1770951284230.jpg",
+    "raw_url": "https://raw.githubusercontent.com/ysmrfcc/labelscope-web-poc/main/images/cam_1770951284230.jpg",
+    "ts": 1770969430
+  },
+  "cv_result": {
+    "error": true,
+    "status": 401,
+    "message": "{\"error\":{\"code\":\"401\",\"message\":\"Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.\"}}"
+  }
+}
