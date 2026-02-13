@@ -1,1 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CVテストビューア</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    button { padding: 10px 16px; font-size: 16px; }
+    pre { white-space: pre-wrap; background: #f0f0f0; padding: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>画像アップロード（スマホ）</h2>
+
+<p>画像は GitHub の <b>images/</b> にアップロードしてください。</p>
+<p>
+  <a href="https://github.com/あなたのユーザー名/labelscope-web-poc/upload/main/images"
+     target="_blank">
+     画像をアップロードする
+  </a>
+</p>
+
+<hr>
+
+<h2>最新の解析結果</h2>
+
+<button onclick="loadResult()">最新結果を index.json を読む
+    const indexUrl = "./data/index.json";
+    const indexRes = await fetch(indexUrl + "?t=" + Date.now());
+    if (!indexRes.ok) {
+      document.getElementById("resultArea").textContent = "index.json がありません。";
+      return;
+    }
+
+    const files = await indexRes.json();
+    if (!files.length) {
+      document.getElementById("resultArea").textContent = "まだ結果がありません。";
+      return;
+    }
+
+    // 一番上＝最新
+    const latest = files[0];
+    const jsonUrl = "./data/" + latest;
+    const res = await fetch(jsonUrl + "?t=" + Date.now());
+    const data = await res.json();
+
+    document.getElementById("resultArea").textContent =
+      JSON.stringify(data, null, 2);
+
+  } catch(e) {
+    document.getElementById("resultArea").textContent =
+      "エラー: " + e.message;
+  }
+}
+</script>
+
+</body>
+</html>
 
