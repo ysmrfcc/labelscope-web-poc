@@ -28,18 +28,73 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Run CV
+      - name: Generate script
+        if: ${{ steps.img.outputs.file != '' }}
+        shell: bash
+        run: |
+          cat > run_cv.py <<'PY'
+import os, json, pathlib, urllib.request, urllib.error, sys
+
+endpoint = os.environ["AZURE_CV_ENDPOINT"].rstrip('/')
+key      = os.environ["AZURE_CV_KEY"]
+img_path = os.environ["INPUT_IMAGE"]
+
+def analyze(pth: str):
+    url = f"{endpoint}/computervision/imageanalysis:analyze?api-version=2023-10-01&features=caption,tags"
+    with open(pth, "rb") as f:
+        body = f.read()
+    req = urllib.request.Request(url, data=body, method='POST', headers={
+        "Ocp-Apim-Subscription-Key": key,
+        "Content-Type": "application/octet-stream"
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.loads(r.read().decode('utf-8'))
+    except urllib.error.HTTPError as e:
+        return {"error": True, "status": e.code, "message": e.read().decode('utf-8', 'ignore')}
+
+result = analyze(img_path)
+
+outdir = pathlib.Path("docs") / "data"
+outdir.mkdir(parents=True, exist_ok=True)
+
+outfile = outdir / (pathlib.Path(img_path).name + ".json")
+payload = {
+    "source": {"file": pathlib.Path(img_path).name},
+    "cv_result": result
+}
+outfile.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+# index.json を更新（先頭に今回分を追加、最大100件）
+index = outdir / "index.json"
+lst = []
+if index.exists():
+    try:
+        lst = json.loads(index.read_text(encoding="utf-8"))
+    except Exception:
+        lst = []
+name = pathlib.Path(img_path).name + ".json"
+if name in lst:
+    lst.remove(name)
+lst.insert(0, name)
+index.write_text(json.dumps(lst[:100], ensure_ascii=False, indent=2), encoding="utf-8")
+PY
+
+      - name: Run CV script
         if: ${{ steps.img.outputs.file != '' }}
         env:
           AZURE_CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
           AZURE_CV_KEY: ${{ secrets.AZURE_CV_KEY }}
+          INPUT_IMAGE: ${{ steps.img.outputs.file }}
         shell: bash
         run: |
-          python - <<'PY'
-import os, json, pathlib, urllib.request, urllib.error
+          python run_cv.py
 
-endpoint = os.environ["AZURE_CV_ENDPOINT"].rstrip('/')
-key      = os.environ["AZURE_CV_KEY"]
-img_path = "${{ steps.img.outputs.file }}"
-
-def analyze(pth: str):
+      - name: Commit results
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          git commit -m "Add CV results [skip ci]" || echo "no changes"
+          git push
