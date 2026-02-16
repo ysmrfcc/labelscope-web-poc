@@ -1,0 +1,13 @@
+{
+  "source": {
+    "file": "cam_1771286334672.jpg",
+    "path": "images/cam_1771286334672.jpg",
+    "raw_url": "https://raw.githubusercontent.com/ysmrfcc/labelscope-web-poc/main/images/cam_1771286334672.jpg",
+    "ts": 1771286357
+  },
+  "cv_result": {
+    "error": true,
+    "status": 404,
+    "message": "{\"error\":{\"code\":\"404\",\"message\": \"Resource not found\"}}"
+  }
+}
