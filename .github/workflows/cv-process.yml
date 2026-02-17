@@ -1,36 +1,29 @@
-name: CV Process
+name: CV Prediction
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'images/**'  # images 配下の更新で毎回起動
+      - 'images/**'
 
 jobs:
-  run-cv:
+  run-prediction:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
-    # ジョブ全体に Secrets を注入（全ステップ参照可）
     env:
       GITHUB_REPOSITORY: ${{ github.repository }}
-      AZURE_CV_ENDPOINT: ${{ secrets.AZURE_CV_ENDPOINT }}
-      AZURE_CV_KEY: ${{ secrets.AZURE_CV_KEY }}
+      PREDICTION_ENDPOINT: ${{ secrets.PREDICTION_ENDPOINT }}
+      PREDICTION_KEY: ${{ secrets.PREDICTION_KEY }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Validate secrets
-        shell: bash
         run: |
-          set -e
-          if [ -z "${AZURE_CV_ENDPOINT}" ] || [ -z "${AZURE_CV_KEY}" ]; then
-            echo "Secrets missing: AZURE_CV_ENDPOINT or AZURE_CV_KEY"
-            exit 1
-          fi
-          echo "Secrets present: OK"
+          test -n "${PREDICTION_ENDPOINT}" || (echo "PREDICTION_ENDPOINT missing" && exit 1)
+          test -n "${PREDICTION_KEY}" || (echo "PREDICTION_KEY missing" && exit 1)
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -38,14 +31,12 @@ jobs:
           python-version: '3.x'
 
       - name: Build results (per-image JSON + index.json)
-        run: |
-          python scripts/build_results.py
+        run: python scripts/build_results.py
 
       - name: Commit outputs
-        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data
-          git commit -m "results: update docs/data (json + index.json) [skip ci]" || echo "no changes"
+          git commit -m "results: update docs/data (prediction json + index.json) [skip ci]" || echo "no changes"
           git push
