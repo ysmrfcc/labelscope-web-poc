@@ -2,8 +2,8 @@
 import os, json, pathlib, urllib.request, urllib.error, time
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
-PREDICTION_ENDPOINT = (os.environ.get("PREDICTION_ENDPOINT") or "").strip()
-PREDICTION_KEY = (os.environ.get("PREDICTION_KEY") or "").strip()
+PREDICTION_ENDPOINT = (os.environ.get("azure_cv_endpoint") or "").strip()  # ← Secrets 名に合わせる
+PREDICTION_KEY = (os.environ.get("azure_cv_key") or "").strip()            # ← Secrets 名に合わせる
 
 IMG_DIR = pathlib.Path("images")
 OUT_DIR = pathlib.Path("docs") / "data"
@@ -19,10 +19,15 @@ def list_images():
     return files
 
 def predict(img_path: pathlib.Path):
-    if not PREDICTION_ENDPOINT or not PREDICTION_KEY:
-        return {"error": True, "message": "Prediction endpoint/key not configured"}
+    if not PREDICTION_ENDPOINT:
+        return {"error": True, "message": "azure_cv_endpoint empty"}
+    if not PREDICTION_KEY:
+        return {"error": True, "message": "azure_cv_key empty"}
+
     with open(img_path, "rb") as f:
         body = f.read()
+
+    # 物体検出モデルなので /detect/…/image の Prediction URL を使う（View Endpoint の “image file” をコピペ）
     req = urllib.request.Request(
         PREDICTION_ENDPOINT,
         data=body,
