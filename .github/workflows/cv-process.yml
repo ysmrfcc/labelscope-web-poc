@@ -5,6 +5,8 @@ on:
     branches: [ main ]
     paths:
       - 'images/**'
+      - 'scripts/build_results.py'
+      - '.github/workflows/cv-process.yml'
 
 jobs:
   run-prediction:
@@ -13,17 +15,21 @@ jobs:
       contents: write
     env:
       GITHUB_REPOSITORY: ${{ github.repository }}
-      PREDICTION_ENDPOINT: ${{ secrets.PREDICTION_ENDPOINT }}
-      PREDICTION_KEY: ${{ secrets.PREDICTION_KEY }}
+      # 既存の Secrets 名をそのまま使う（中身は Prediction 用の detect URL と Prediction-Key）
+      azure_cv_endpoint: ${{ secrets.azure_cv_endpoint }}
+      azure_cv_key: ${{ secrets.azure_cv_key }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Validate secrets
+        shell: bash
         run: |
-          test -n "${PREDICTION_ENDPOINT}" || (echo "PREDICTION_ENDPOINT missing" && exit 1)
-          test -n "${PREDICTION_KEY}" || (echo "PREDICTION_KEY missing" && exit 1)
+          set -e
+          if [ -z "${azure_cv_endpoint}" ]; then echo "azure_cv_endpoint missing"; exit 1; fi
+          if [ -z "${azure_cv_key}" ]; then echo "azure_cv_key missing"; exit 1; fi
+          echo "Secrets OK"
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -34,6 +40,7 @@ jobs:
         run: python scripts/build_results.py
 
       - name: Commit outputs
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
