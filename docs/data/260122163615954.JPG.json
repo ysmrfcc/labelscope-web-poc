@@ -1,0 +1,577 @@
+{
+  "source": {
+    "file": "260122163615954.JPG",
+    "path": "images/260122163615954.JPG",
+    "raw_url": "https://raw.githubusercontent.com/ysmrfcc/labelscope-web-poc/main/images/260122163615954.JPG",
+    "ts": 1771300857
+  },
+  "cv_result": {
+    "id": "8fb34bbc-e3ef-43fc-871a-f14d065029a1",
+    "project": "426be9d3-31d2-4b84-99e5-ca566268c90c",
+    "iteration": "d8e9e227-eda2-48af-9402-c98c7bc989e3",
+    "created": "2026-02-17T04:00:56.848Z",
+    "predictions": [
+      {
+        "probability": 0.24901548,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.43395817,
+          "top": 0.0679688,
+          "width": 0.14717996,
+          "height": 0.35066515
+        }
+      },
+      {
+        "probability": 0.14367074,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.5676471,
+          "top": 0.0029998124,
+          "width": 0.1924308,
+          "height": 0.36184648
+        }
+      },
+      {
+        "probability": 0.107757434,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.34528944,
+          "top": 0.21676034,
+          "width": 0.5194901,
+          "height": 0.65865326
+        }
+      },
+      {
+        "probability": 0.08801095,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.40746036,
+          "top": 0.10911636,
+          "width": 0.3810663,
+          "height": 0.2506894
+        }
+      },
+      {
+        "probability": 0.06868334,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.24380141,
+          "width": 0.34716266,
+          "height": 0.7362156
+        }
+      },
+      {
+        "probability": 0.066246815,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.77863854,
+          "top": 0.0,
+          "width": 0.17326444,
+          "height": 0.23740388
+        }
+      },
+      {
+        "probability": 0.051948383,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.41451517,
+          "top": 0.4270729,
+          "width": 0.17302033,
+          "height": 0.35751554
+        }
+      },
+      {
+        "probability": 0.03897049,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.24950811,
+          "width": 0.40037227,
+          "height": 0.7281996
+        }
+      },
+      {
+        "probability": 0.036254324,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.09703794,
+          "top": 0.19301191,
+          "width": 0.09081188,
+          "height": 0.13739726
+        }
+      },
+      {
+        "probability": 0.024641084,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.2375935,
+          "top": 0.88963556,
+          "width": 0.102247566,
+          "height": 0.110363424
+        }
+      },
+      {
+        "probability": 0.023992013,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.793327,
+          "top": 0.0,
+          "width": 0.14613712,
+          "height": 0.09963857
+        }
+      },
+      {
+        "probability": 0.023877159,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.48632574,
+          "top": 0.044240177,
+          "width": 0.45543468,
+          "height": 0.7121
+        }
+      },
+      {
+        "probability": 0.022480974,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.8506257,
+          "top": 0.8923942,
+          "width": 0.13829643,
+          "height": 0.1076048
+        }
+      },
+      {
+        "probability": 0.022402942,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.23309092,
+          "top": 0.83202404,
+          "width": 0.107102945,
+          "height": 0.13506621
+        }
+      },
+      {
+        "probability": 0.021649715,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.828201,
+          "top": 0.0010782033,
+          "width": 0.17179799,
+          "height": 0.35148233
+        }
+      },
+      {
+        "probability": 0.017127298,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.9224466,
+          "top": 0.531435,
+          "width": 0.07755238,
+          "height": 0.16896814
+        }
+      },
+      {
+        "probability": 0.016758595,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.44865754,
+          "top": 0.45656365,
+          "width": 0.09900549,
+          "height": 0.15116423
+        }
+      },
+      {
+        "probability": 0.016123101,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.13342941,
+          "top": 0.4634918,
+          "width": 0.10531546,
+          "height": 0.14188588
+        }
+      },
+      {
+        "probability": 0.0152071845,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.77863854,
+          "top": 0.0,
+          "width": 0.17326444,
+          "height": 0.23740388
+        }
+      },
+      {
+        "probability": 0.014783362,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.0,
+          "width": 0.3755884,
+          "height": 0.15879568
+        }
+      },
+      {
+        "probability": 0.013967178,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.16695005,
+          "top": 0.3482308,
+          "width": 0.5609608,
+          "height": 0.6420857
+        }
+      },
+      {
+        "probability": 0.013416328,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.34528944,
+          "top": 0.21676034,
+          "width": 0.5194901,
+          "height": 0.65865326
+        }
+      },
+      {
+        "probability": 0.013370336,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.81031936,
+          "width": 0.07102281,
+          "height": 0.16878182
+        }
+      },
+      {
+        "probability": 0.013127867,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.09703794,
+          "top": 0.19301191,
+          "width": 0.09081188,
+          "height": 0.13739726
+        }
+      },
+      {
+        "probability": 0.01141747,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.086490035,
+          "top": 0.031211227,
+          "width": 0.5145466,
+          "height": 0.7393532
+        }
+      },
+      {
+        "probability": 0.010298536,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.45515275,
+          "top": 0.15702213,
+          "width": 0.10031319,
+          "height": 0.19090323
+        }
+      },
+      {
+        "probability": 0.010066523,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.13513473,
+          "top": 0.5412349,
+          "width": 0.1050228,
+          "height": 0.13769919
+        }
+      },
+      {
+        "probability": 0.009599393,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.18493852,
+          "top": 0.68017256,
+          "width": 0.09831014,
+          "height": 0.13267803
+        }
+      },
+      {
+        "probability": 0.009260246,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.3466731,
+          "top": 0.0,
+          "width": 0.5086049,
+          "height": 0.55885756
+        }
+      },
+      {
+        "probability": 0.0089595355,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.41451517,
+          "top": 0.4270729,
+          "width": 0.17302033,
+          "height": 0.35751554
+        }
+      },
+      {
+        "probability": 0.008773336,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.021620102,
+          "top": 0.31643048,
+          "width": 0.098706946,
+          "height": 0.15130058
+        }
+      },
+      {
+        "probability": 0.008168928,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.08224162,
+          "top": 0.8222003,
+          "width": 0.10300205,
+          "height": 0.13886225
+        }
+      },
+      {
+        "probability": 0.007462636,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.2375935,
+          "top": 0.88963556,
+          "width": 0.102247566,
+          "height": 0.110363424
+        }
+      },
+      {
+        "probability": 0.0073509864,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.13262829,
+          "top": 0.39727503,
+          "width": 0.10445124,
+          "height": 0.13893825
+        }
+      },
+      {
+        "probability": 0.007337594,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.793327,
+          "top": 0.0,
+          "width": 0.14613712,
+          "height": 0.09963857
+        }
+      },
+      {
+        "probability": 0.0070406618,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.3781944,
+          "top": 0.042840093,
+          "width": 0.15206331,
+          "height": 0.40143338
+        }
+      },
+      {
+        "probability": 0.0064455615,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.13124055,
+          "top": 0.89237136,
+          "width": 0.10128483,
+          "height": 0.10762763
+        }
+      },
+      {
+        "probability": 0.006389938,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.9224466,
+          "top": 0.531435,
+          "width": 0.07755238,
+          "height": 0.16896814
+        }
+      },
+      {
+        "probability": 0.006259717,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.8506257,
+          "top": 0.8923942,
+          "width": 0.13829643,
+          "height": 0.1076048
+        }
+      },
+      {
+        "probability": 0.005876757,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.81031936,
+          "width": 0.07102281,
+          "height": 0.16878182
+        }
+      },
+      {
+        "probability": 0.0056757885,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.828201,
+          "top": 0.0010782033,
+          "width": 0.17179799,
+          "height": 0.35148233
+        }
+      },
+      {
+        "probability": 0.005562763,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.39731336,
+          "top": 0.46760622,
+          "width": 0.102921665,
+          "height": 0.13652167
+        }
+      },
+      {
+        "probability": 0.005512323,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.12238318,
+          "top": 0.24541272,
+          "width": 0.104421556,
+          "height": 0.14705501
+        }
+      },
+      {
+        "probability": 0.0054601417,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.41451517,
+          "top": 0.4270729,
+          "width": 0.17302033,
+          "height": 0.35751554
+        }
+      },
+      {
+        "probability": 0.005429623,
+        "tagId": "8e200418-0eec-4a14-a49d-293c407421cb",
+        "tagName": "yamato_waybill_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.3418309,
+          "width": 0.403642,
+          "height": 0.6581681
+        }
+      },
+      {
+        "probability": 0.0052769003,
+        "tagId": "8e200418-0eec-4a14-a49d-293c407421cb",
+        "tagName": "yamato_waybill_1",
+        "boundingBox": {
+          "left": 0.09062421,
+          "top": 0.10569811,
+          "width": 0.5030139,
+          "height": 0.73325855
+        }
+      },
+      {
+        "probability": 0.005264599,
+        "tagId": "583537ca-0323-4479-bbc2-189f02369cc5",
+        "tagName": "yamato_date_1",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.81031936,
+          "width": 0.07102281,
+          "height": 0.16878182
+        }
+      },
+      {
+        "probability": 0.005233143,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.41226804,
+          "top": 0.03686759,
+          "width": 0.38208866,
+          "height": 0.29658726
+        }
+      },
+      {
+        "probability": 0.005203302,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.018032163,
+          "top": 0.25828663,
+          "width": 0.10400288,
+          "height": 0.1453521
+        }
+      },
+      {
+        "probability": 0.005103917,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.0,
+          "top": 0.328776,
+          "width": 0.16979115,
+          "height": 0.41355193
+        }
+      },
+      {
+        "probability": 0.005101846,
+        "tagId": "2ec423a2-bce1-40c7-bd9b-fad7fddc1ec0",
+        "tagName": "yamato_detention_1",
+        "boundingBox": {
+          "left": 0.13555884,
+          "top": 0.6776857,
+          "width": 0.09487286,
+          "height": 0.1339572
+        }
+      }
+    ]
+  }
+}
