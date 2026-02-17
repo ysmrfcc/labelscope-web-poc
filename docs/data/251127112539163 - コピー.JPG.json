@@ -1,0 +1,159 @@
+{
+  "source": {
+    "file": "251127112539163 - コピー.JPG",
+    "path": "images/251127112539163 - コピー.JPG",
+    "raw_url": "https://raw.githubusercontent.com/ysmrfcc/labelscope-web-poc/main/images/251127112539163 - コピー.JPG",
+    "ts": 1771316083
+  },
+  "cv_result": {
+    "id": "853fc8bf-8ace-493f-b2cb-8c0082d51560",
+    "project": "426be9d3-31d2-4b84-99e5-ca566268c90c",
+    "iteration": "d8e9e227-eda2-48af-9402-c98c7bc989e3",
+    "created": "2026-02-17T08:14:43.471Z",
+    "predictions": [
+      {
+        "probability": 0.8463211,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.051736012,
+          "top": 0.1892101,
+          "width": 0.15792587,
+          "height": 0.08908774
+        }
+      },
+      {
+        "probability": 0.8414917,
+        "tagId": "8e200418-0eec-4a14-a49d-293c407421cb",
+        "tagName": "yamato_waybill_1",
+        "boundingBox": {
+          "left": 0.54487133,
+          "top": 0.18140875,
+          "width": 0.29881227,
+          "height": 0.35286236
+        }
+      },
+      {
+        "probability": 0.055759214,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.078056455,
+          "top": 0.1833362,
+          "width": 0.15788099,
+          "height": 0.100544184
+        }
+      },
+      {
+        "probability": 0.012744723,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.08583006,
+          "top": 0.4791603,
+          "width": 0.76409376,
+          "height": 0.45702446
+        }
+      },
+      {
+        "probability": 0.010374931,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.8533585,
+          "top": 0.036183923,
+          "width": 0.14664048,
+          "height": 0.29326177
+        }
+      },
+      {
+        "probability": 0.008021325,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.078056455,
+          "top": 0.1833362,
+          "width": 0.15788099,
+          "height": 0.100544184
+        }
+      },
+      {
+        "probability": 0.00760753,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.08450787,
+          "top": 0.21771124,
+          "width": 0.043621525,
+          "height": 0.032176137
+        }
+      },
+      {
+        "probability": 0.00756595,
+        "tagId": "8e200418-0eec-4a14-a49d-293c407421cb",
+        "tagName": "yamato_waybill_1",
+        "boundingBox": {
+          "left": 0.08583006,
+          "top": 0.4791603,
+          "width": 0.76409376,
+          "height": 0.45702446
+        }
+      },
+      {
+        "probability": 0.0071676504,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.19859818,
+          "top": 0.47248986,
+          "width": 0.51701367,
+          "height": 0.15814897
+        }
+      },
+      {
+        "probability": 0.0069273203,
+        "tagId": "87939a5c-fcbc-4722-b903-eb7ce7fe85ac",
+        "tagName": "yamato_fragile_1",
+        "boundingBox": {
+          "left": 0.1573536,
+          "top": 0.21832278,
+          "width": 0.040108338,
+          "height": 0.03512934
+        }
+      },
+      {
+        "probability": 0.0067235497,
+        "tagId": "d287c5d9-390c-4103-a608-cb7bb02751b5",
+        "tagName": "customer_1",
+        "boundingBox": {
+          "left": 0.17957717,
+          "top": 0.657288,
+          "width": 0.5746204,
+          "height": 0.21343553
+        }
+      },
+      {
+        "probability": 0.006439499,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.053347856,
+          "top": 0.0,
+          "width": 0.67693746,
+          "height": 0.48796874
+        }
+      },
+      {
+        "probability": 0.005784569,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.31574157,
+          "top": 0.50134224,
+          "width": 0.15986148,
+          "height": 0.10281408
+        }
+      }
+    ]
+  }
+}
