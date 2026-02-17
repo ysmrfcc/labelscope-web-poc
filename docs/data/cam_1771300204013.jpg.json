@@ -1,0 +1,38 @@
+{
+  "source": {
+    "file": "cam_1771300204013.jpg",
+    "path": "images/cam_1771300204013.jpg",
+    "raw_url": "https://raw.githubusercontent.com/ysmrfcc/labelscope-web-poc/main/images/cam_1771300204013.jpg",
+    "ts": 1771300224
+  },
+  "cv_result": {
+    "id": "cf11e3f1-4054-4aeb-a79c-5fb91c13dfd4",
+    "project": "426be9d3-31d2-4b84-99e5-ca566268c90c",
+    "iteration": "d8e9e227-eda2-48af-9402-c98c7bc989e3",
+    "created": "2026-02-17T03:50:23.984Z",
+    "predictions": [
+      {
+        "probability": 0.01565308,
+        "tagId": "5b9621c5-80d2-4dbd-a1bc-0fa5f00cf243",
+        "tagName": "yamato_waybill_2",
+        "boundingBox": {
+          "left": 0.31674927,
+          "top": 0.19011232,
+          "width": 0.6832497,
+          "height": 0.51207995
+        }
+      },
+      {
+        "probability": 0.0053643323,
+        "tagId": "9ef990fa-3514-4d7a-b082-c9abce9607fd",
+        "tagName": "yamato_am_1",
+        "boundingBox": {
+          "left": 0.9160383,
+          "top": 0.75338197,
+          "width": 0.08396071,
+          "height": 0.14008081
+        }
+      }
+    ]
+  }
+}
