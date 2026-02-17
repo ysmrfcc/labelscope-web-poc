@@ -2,8 +2,8 @@
 import os, json, pathlib, urllib.request, urllib.error, time
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
-ENDPOINT = (os.environ.get("AZURE_CV_ENDPOINT") or "").rstrip("/")
-KEY = os.environ.get("AZURE_CV_KEY") or ""
+PREDICTION_ENDPOINT = (os.environ.get("PREDICTION_ENDPOINT") or "").strip()
+PREDICTION_KEY = (os.environ.get("PREDICTION_KEY") or "").strip()
 
 IMG_DIR = pathlib.Path("images")
 OUT_DIR = pathlib.Path("docs") / "data"
@@ -15,22 +15,20 @@ def list_images():
     if not IMG_DIR.exists():
         return []
     files = [p for p in IMG_DIR.rglob("*") if p.is_file() and p.suffix.lower() in ALLOWED]
-    files.sort(key=lambda p: p.stat().st_mtime, reverse=True)  # 新しい順
+    files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return files
 
-def analyze(pth: pathlib.Path):
-    # Image Analysis 4.0 / 2024-02-01
-    url = f"{ENDPOINT}/computervision/imageanalysis:analyze?api-version=2024-02-01&features=caption,tags,objects"
-    if not ENDPOINT or not KEY:
-        return {"error": True, "message": "CV endpoint/key not configured"}
-    with open(pth, "rb") as f:
+def predict(img_path: pathlib.Path):
+    if not PREDICTION_ENDPOINT or not PREDICTION_KEY:
+        return {"error": True, "message": "Prediction endpoint/key not configured"}
+    with open(img_path, "rb") as f:
         body = f.read()
     req = urllib.request.Request(
-        url,
+        PREDICTION_ENDPOINT,
         data=body,
         method="POST",
         headers={
-            "Ocp-Apim-Subscription-Key": KEY,
+            "Prediction-Key": PREDICTION_KEY,
             "Content-Type": "application/octet-stream",
         },
     )
@@ -42,18 +40,17 @@ def analyze(pth: pathlib.Path):
     except Exception as e:
         return {"error": True, "message": str(e)}
 
-def ensure_result_for(img: pathlib.Path):
-    name = img.name + ".json"
-    out = OUT_DIR / name
-    if not out.exists():
-        cv = analyze(img)
+def ensure_result(img: pathlib.Path):
+    out_file = OUT_DIR / f"{img.name}.json"
+    if not out_file.exists():
+        res = predict(img)
         raw_url = f"https://raw.githubusercontent.com/{REPO}/main/{img.as_posix()}" if REPO else None
         payload = {
             "source": {"file": img.name, "path": img.as_posix(), "raw_url": raw_url, "ts": int(time.time())},
-            "cv_result": cv,
+            "cv_result": res,
         }
-        out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    return out
+        out_file.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return out_file
 
 def rebuild_index(json_files):
     items = sorted([p.name for p in json_files], key=lambda n: (OUT_DIR / n).stat().st_mtime, reverse=True)
@@ -61,12 +58,8 @@ def rebuild_index(json_files):
 
 def main():
     imgs = list_images()
-    json_files = []
-    for img in imgs:
-        jf = ensure_result_for(img)
-        json_files.append(jf.name)
-    # 0件でも index.json は必ず作成（空配列）
-    rebuild_index([OUT_DIR / n for n in json_files])
+    jfs = [ensure_result(p) for p in imgs]
+    rebuild_index([OUT_DIR / jf.name for jf in jfs])
 
 if __name__ == "__main__":
     main()
